@@ -1,0 +1,10 @@
+^C:\USERS\86187\DESKTOP\SOSFILTFILT\CMAKELISTS.TXT
+setlocal
+"D:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/86187/Desktop/sosfiltfilt -BC:/Users/86187/Desktop/sosfiltfilt/build --check-stamp-file C:/Users/86187/Desktop/sosfiltfilt/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

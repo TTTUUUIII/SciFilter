@@ -1,0 +1,49 @@
+#include <iostream>
+#include <Eigen/Eigen>
+
+using namespace Eigen;
+
+void _validate_pad(std::string padtype, int padlen, VectorXd x, int axis, int ntaps) {
+    if (padtype == "even") {
+        /* code */
+    } else if (padtype == "odd") {
+        /* code */
+    } else if (padtype == "constant") {
+        /* code */
+    } else {
+        throw std::runtime_error("ERROR: Unsupport padtype " + padtype);
+    }
+
+    int edge;
+    if (padlen == -1) {
+        edge = ntaps * 3;
+    } else {
+        edge = padlen;
+    }
+    
+    
+}
+
+void sosfiltfilt(MatrixXd sos, VectorXd data) {
+    int n_sections = sos.rows();
+    int ntaps = 2 * n_sections + 1;
+    ntaps -= std::min((sos.col(2).array() == 0).count(), (sos.col(5).array() == 0).count());
+    std::cout << ntaps << std::endl;
+}
+
+int main(int, char**){
+    MatrixXd sos(4, 6);
+    sos <<  2.13138727e-04, -4.26277454e-04,  2.13138727e-04, 1.00000000e+00,  1.59908181e+00,  7.57867157e-01,
+            1.00000000e+00, -2.00000000e+00,  1.00000000e+00, 1.00000000e+00,  1.71742882e+00,  8.10236696e-01,
+            1.00000000e+00,  2.00000000e+00,  1.00000000e+00, 1.00000000e+00,  1.63790142e+00,  8.78904341e-01,
+            1.00000000e+00,  2.00000000e+00,  1.00000000e+00, 1.00000000e+00,  1.86376749e+00,  9.32707241e-01;
+    VectorXd data(30);
+    data << 0.6946206 , 0.72065928, 0.71175556, 0.3165333 , 0.56357013,
+            0.57616846, 0.3945364 , 0.95319502, 0.00880446, 0.7289753 ,
+            0.0959869 , 0.87426247, 0.28919631, 0.20801535, 0.66681132,
+            0.45294633, 0.31652167, 0.41018225, 0.25336426, 0.55678081,
+            0.07227884, 0.13323194, 0.24559928, 0.99696976, 0.47162671,
+            0.93892957, 0.03232417, 0.15617559, 0.00110923, 0.07243705;
+    sosfiltfilt(sos, data);
+    std::cout << "Hello, from DSPFilter!\n";
+}
