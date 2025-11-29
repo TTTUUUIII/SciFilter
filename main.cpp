@@ -3,17 +3,23 @@
 
 using namespace Eigen;
 
-void _validate_pad(std::string padtype, int padlen, VectorXd x, int axis, int ntaps) {
-    if (padtype == "even") {
-        /* code */
-    } else if (padtype == "odd") {
-        /* code */
-    } else if (padtype == "constant") {
-        /* code */
-    } else {
-        throw std::runtime_error("ERROR: Unsupport padtype " + padtype);
-    }
+void axis_slice(VectorXd a, int start, int stop, int step) {
 
+}
+
+void const_ext(VectorXd x, int n) {
+
+}
+
+void even_ext(VectorXd x, int n) {
+
+}
+
+void odd_ext(VectorXd x, int n) {
+    if(n < 1) return;
+}
+
+void _validate_pad(std::string padtype, int padlen, VectorXd x, int axis, int ntaps) {
     int edge;
     if (padlen == -1) {
         edge = ntaps * 3;
@@ -21,7 +27,15 @@ void _validate_pad(std::string padtype, int padlen, VectorXd x, int axis, int nt
         edge = padlen;
     }
     
-    
+    if (padtype == "even") {
+        even_ext(x, edge);
+    } else if (padtype == "odd") {
+        odd_ext(x, edge);
+    } else if (padtype == "constant") {
+        const_ext(x, edge);
+    } else {
+        // Do Nothing
+    }
 }
 
 void sosfiltfilt(MatrixXd sos, VectorXd data) {
