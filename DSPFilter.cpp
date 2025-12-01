@@ -5,7 +5,7 @@
 using namespace std;
 namespace DSPFilter
 {
-    MatrixXd reshape(
+    static MatrixXd reshape(
         const MatrixXd &A,
         Index rows,
         Index cols)
@@ -38,7 +38,7 @@ namespace DSPFilter
         return B;
     }
 
-    MatrixXd companion(
+    static MatrixXd companion(
         const VectorXd &a)
     {
         Index n = a.size();
@@ -54,7 +54,7 @@ namespace DSPFilter
         return c;
     }
 
-    VectorXd lfilter_zi(
+    static VectorXd lfilter_zi(
         VectorXd b,
         VectorXd a)
     {
@@ -87,7 +87,7 @@ namespace DSPFilter
         return zi;
     }
 
-    MatrixXd sosfilt_zi(const MatrixXd &sos)
+    static MatrixXd sosfilt_zi(const MatrixXd &sos)
     {
         size_t n_sections = sos.rows();
         MatrixXd zi(n_sections, 2);
@@ -112,10 +112,10 @@ namespace DSPFilter
         return zi;
     }
 
-    VectorXd axis_slice(
+    static VectorXd axis_slice(
         const VectorXd &a,
-        Index start,
-        Index stop,
+        int start,
+        int stop,
         int step)
     {
         Index size = a.rows();
@@ -149,7 +149,7 @@ namespace DSPFilter
         return b;
     }
 
-    VectorXd odd_ext(
+    static VectorXd odd_ext(
         const VectorXd &x,
         const int n)
     {
@@ -178,12 +178,12 @@ namespace DSPFilter
         return ext;
     }
 
-    VectorXd _validate_pad(
+    static VectorXd _validate_pad(
         const string &padtype,
         const size_t padlen,
         const VectorXd &x,
-        const size_t ntaps,
-        size_t &_edge)
+        const int ntaps,
+        int &_edge)
     {
         if (padlen == -1)
         {
@@ -197,7 +197,7 @@ namespace DSPFilter
         return odd_ext(x, _edge);
     }
 
-    void sosfilt(
+    static void sosfilt(
         const Ref<const MatrixXd> &sos, // (n_sections, 6)
         Ref<VectorXd> x,                // (n_signals, n_samples), modified in-place
         MatrixXd &zi                    // (n_signals, n_sections, 2), modified in-place
@@ -231,9 +231,9 @@ namespace DSPFilter
         const VectorXd &x)
     {
         Index n_sections = sos.rows();
-        size_t ntaps = 2 * n_sections + 1;
+        int ntaps = 2 * n_sections + 1;
         ntaps -= min((sos.col(2).array() == 0).count(), (sos.col(5).array() == 0).count());
-        size_t edge;
+        int edge;
         VectorXd ext = _validate_pad("odd", -1, x, ntaps, edge);
         MatrixXd zi = sosfilt_zi(sos);
         zi = reshape(zi, n_sections, 2);
