@@ -1,7 +1,6 @@
 
 #include <SciFilter.h>
 #include <math.h>
-#include <iostream>
 #include <cassert>
 using namespace std;
 namespace SciFilter
