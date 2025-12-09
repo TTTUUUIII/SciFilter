@@ -1,6 +1,7 @@
 
 #include <SciFilter.h>
 #include <math.h>
+#include <iostream>
 #include <cassert>
 using namespace std;
 namespace SciFilter
@@ -224,6 +225,59 @@ namespace SciFilter
             x(n) = x_cur;
             ;
         }
+    }
+
+    static void lfilter(VectorXd b, VectorXd a, Ref<VectorXd> x, VectorXd &Z)
+    {
+        double a0 = a[0];
+        for (Index n = 0; n < b.rows(); ++n)
+        {
+            b[n] /= a0;
+            a[n] /= a0;
+        }
+        for (size_t k = 0; k < x.rows(); ++k)
+        {
+            double xn = x[k], y;
+
+            if (b.rows() > 1)
+            {
+                y = Z[0] + b[0] * xn;
+                for (size_t n = 0; n < b.rows() - 2; ++n)
+                {
+                    Z[n] = Z[n + 1] + xn * b[n + 1] - y * a[n + 1];
+                }
+                Z[b.rows() - 2] = xn * b[b.rows() - 1] - y * a[b.rows() - 1];
+            }
+            else
+            {
+                y = xn * b[0];
+            }
+
+            x[k] = y;
+        }
+    }
+
+    VectorXd filtfilt(
+        const VectorXd &b,
+        const VectorXd &a,
+        const VectorXd &x)
+    {
+        int edge, ntaps = max(a.rows(), b.rows());
+        VectorXd ext = _validate_pad("odd", -1, x, ntaps, edge);
+        VectorXd zi = lfilter_zi(b, a);
+        double x_0 = ext[0];
+        VectorXd zf = zi * x_0;
+        lfilter(b, a, ext, zf);
+        double y_0 = ext.tail(1)[0];
+        zf = zi * y_0;
+        VectorXd y = ext.reverse();
+        lfilter(b, a, y, zf);
+        y.reverseInPlace();
+        if (edge > 0)
+        {
+            y = axis_slice(y, edge, -edge, 1);
+        }
+        return y;
     }
 
     VectorXd sosfiltfilt(
