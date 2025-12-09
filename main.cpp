@@ -1,5 +1,5 @@
 #include <iostream>
-#include <DSPFilter.h>
+#include <SciFilter.h>
 
 int main(int, char **)
 {
@@ -209,6 +209,6 @@ int main(int, char **)
         2.13623047e-04,  6.10351562e-05, -9.15527344e-05,  2.44140625e-04,
        -1.52587891e-04,  1.83105469e-04, -6.10351562e-05,  9.15527344e-05,
         9.15527344e-05, -3.05175781e-05,  1.52587891e-04,  0.00000000e+00;
-    VectorXd res = DSPFilter::sosfiltfilt(sos, data);
+    VectorXd res = SciFilter::sosfiltfilt(sos, data);
     std::cout << res << std::endl;
 }

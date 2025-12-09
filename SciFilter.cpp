@@ -1,9 +1,9 @@
 
-#include <DSPFilter.h>
+#include <SciFilter.h>
 #include <math.h>
 #include <cassert>
 using namespace std;
-namespace DSPFilter
+namespace SciFilter
 {
     static MatrixXd reshape(
         const MatrixXd &A,
